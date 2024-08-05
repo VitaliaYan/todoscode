@@ -1,0 +1,44 @@
+<div class="container">
+  <h1>Todos</h1>
+  <div class="input-container">
+    <span class="input-arrow" (click)="toggleAllTasks()">&#9660;</span>
+    <input class="input" [(ngModel)]="newTask" (keyup.enter)="addTask()" placeholder="What needs to be done?" />
+  </div>
+  <ul class="task-list">
+    <li *ngFor="let task of filteredTasks" [ngClass]="{ 'task-item': true, 'editing': task.editing }">
+      <input
+        type="checkbox"
+        class="checkbox"
+        [(ngModel)]="task.completed"
+        [ngClass]="{ 'completed': task.completed }"
+        (change)="saveTask(task)"
+      />
+      <span *ngIf="!task.editing" (dblclick)="editTask(task)" [ngClass]="{ 'edit': true, 'completed': task.completed }">{{ task.title }}</span>
+      <input
+        *ngIf="task.editing"
+        type="text"
+        class="edit-input"
+        [(ngModel)]="task.title"
+        (blur)="saveTask(task)"
+        (keydown.enter)="saveTask(task)"
+        (keydown.escape)="cancelEdit(task)"
+      />
+      <span class="delete" (click)="removeTask(task)">&#10006;</span>
+    </li>
+  </ul>
+  <div class="footer">
+    <div class="footer-column">
+      <span>{{ remainingTasks }} item{{ remainingTasks !== 1 ? 's' : '' }} left</span>
+    </div>
+    <div class="footer-column">
+      <div class="filters">
+        <button (click)="filter = 'all'" [class.active]="filter === 'all'">All</button>
+        <button (click)="filter = 'active'" [class.active]="filter === 'active'">Active</button>
+        <button (click)="filter = 'completed'" [class.active]="filter === 'completed'">Completed</button>
+      </div>
+    </div>
+    <div class="footer-column">
+      <button class="clear-completed" *ngIf="hasCompletedTasks()" [class.show]="hasCompletedTasks()" (click)="clearCompleted()">Clear Completed</button>
+    </div>
+  </div>
+</div>
